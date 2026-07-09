@@ -44,6 +44,23 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_admin' => 'boolean',
         ];
+    }
+
+    public function permissions()
+    {
+        return $this->belongsToMany(Permission::class, 'user_permissions');
+    }
+
+    public function hasPermission(string|array $permissions): bool
+    {
+        if (!is_array($permissions)) {
+            $permissions = [$permissions];
+        }
+
+        return $this->permissions()
+            ->whereIn('permissions.name', $permissions)
+            ->exists();
     }
 }
