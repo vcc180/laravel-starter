@@ -12,6 +12,7 @@ Route::middleware(['web'])->prefix('admin')->name('admin.')->group(function () {
     Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
         Route::resource('examples', App\Http\Controllers\Admin\ExampleController::class);
+        Route::resource('articles', App\Http\Controllers\Admin\ArticleController::class);
         Route::resource('locales', App\Http\Controllers\Admin\LocaleController::class)->except(['show']);
         Route::post('locales/{locale}/set-default', [App\Http\Controllers\Admin\LocaleController::class, 'setDefault'])->name('locales.set-default');
     });
