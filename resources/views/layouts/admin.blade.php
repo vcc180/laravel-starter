@@ -23,8 +23,13 @@
                 <a href="{{ route('admin.examples.index') }}" class="nav-link text-white">Examples</a>
             </li>
             <li>
-                <a href="{{ route('home') }}" class="nav-link text-white">Voltar ao site</a>
+                <a href="{{ route('admin.articles.index') }}" class="nav-link text-white">Articles</a>
             </li>
+            @if(Auth::user()?->hasPermission('admin.access'))
+                <li>
+                    <a href="{{ route('admin.permissions.index') }}" class="nav-link text-white">Permissões</a>
+                </li>
+            @endif
         </ul>
         <hr>
         <div class="dropdown">
@@ -44,10 +49,8 @@
 
     <main class="flex-grow-1 p-4">
         <div class="container-fluid">
-            @if(session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-            @elseif(session('error'))
-                <div class="alert alert-danger">{{ session('error') }}</div>
+            @if(session('status'))
+                <div class="alert alert-success">{{ session('status') }}</div>
             @endif
 
             @if($errors->any())

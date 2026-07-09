@@ -15,6 +15,7 @@ Route::middleware(['web'])->prefix('admin')->name('admin.')->group(function () {
         Route::resource('articles', App\Http\Controllers\Admin\ArticleController::class);
         Route::resource('locales', App\Http\Controllers\Admin\LocaleController::class)->except(['show']);
         Route::post('locales/{locale}/set-default', [App\Http\Controllers\Admin\LocaleController::class, 'setDefault'])->name('locales.set-default');
+        Route::resource('permissions', App\Http\Controllers\Admin\PermissionController::class);
     });
 
     Route::get('/login', [App\Http\Controllers\Admin\Auth\LoginController::class, 'showLoginForm'])->name('login');
