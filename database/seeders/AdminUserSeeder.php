@@ -14,6 +14,7 @@ class AdminUserSeeder extends Seeder
             [
                 'name' => 'Admin',
                 'password' => bcrypt('test123'),
+                'is_admin' => true,
             ]
         );
 

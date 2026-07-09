@@ -1,5 +1,7 @@
 @extends('layouts.admin')
 
+@section('title', 'Article #'.$item->id ?? 'Article')
+
 @section('content')
 <div class="card">
     <div class="card-header"><h1 class="h5 mb-0">Article #{{ $item->id }}</h1></div>

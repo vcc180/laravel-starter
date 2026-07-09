@@ -1,5 +1,7 @@
 @extends('layouts.admin')
 
+@section('title', 'Articles')
+
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h1 class="h5 mb-0">Articles</h1>
@@ -40,5 +42,5 @@
     </div>
 </div>
 
-{{ $items->links('vendor.pagination.bootstrap-5') }}
+{{ $articles->links('vendor.pagination.bootstrap-5') }}
 @endsection

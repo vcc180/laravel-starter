@@ -8,9 +8,18 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    public function showLoginForm()
+    public function showLoginForm(Request $request)
     {
         if (Auth::check()) {
+            if (!Auth::user()->is_admin) {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                return redirect()->route('admin.login')
+                    ->withErrors(['email' => 'Acesso restrito a administradores.']);
+            }
+
             return redirect()->route('admin.dashboard');
         }
 

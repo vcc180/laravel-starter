@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Admin;
 
 use App\Models\Locale;
 use Illuminate\Console\Command;
