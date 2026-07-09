@@ -14,10 +14,8 @@ class AdminMiddleware
             return redirect()->route('admin.login');
         }
 
-        $user = Auth::user();
-
-        if (!$user->is_admin && !$user->hasPermission('admin.access')) {
-            abort(403);
+        if (!Auth::user()->hasPermission('admin.access')) {
+            abort(403, 'Acesso restrito a administradores.');
         }
 
         return $next($request);

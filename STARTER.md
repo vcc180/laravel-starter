@@ -59,26 +59,29 @@ DB_DATABASE=/home/jarvies/starter-laravel/database/database.sqlite
 - `app/Http/Controllers/Admin/AdminController.php` — controller admin genérico
 - `resources/views/layouts/app.blade.php` — layout público (Bootstrap)
 - `resources/views/layouts/admin.blade.php` — layout admin (Bootstrap)
-- `app/Http/Middleware/AdminMiddleware.php` — middleware de grupo admin
+- `app/Http/Middleware/AdminMiddleware.php` — middleware de grupo admin baseado em permissão
+- `app/Http/Middleware/CheckPermission.php` — middleware de permissão específica
 
 ## CRUDs incluídos
 
 - `/admin/examples` — controller + migration + views (template copy-paste)
-- `/admin/locales` — CRUD debug com comando `php artisan app:seed-locales`
+- `/admin/articles` — CRUD exemplo Articles
+- `/admin/permissions` — CRUD de permissões ACL
 
 ## Rotas importantes
 
 - `/` — home pública
 - `/admin/login` — login admin
 - `/admin` — dashboard
-- `/admin/examples`, `/admin/locales` — CRUDs exemplo
+- `/admin/examples`, `/admin/locales`, `/admin/permissions` — CRUDs exemplo
 
 ## Seeders
 
-- `php artisan db:seed --class=AdminUserSeeder` — cria admin padrão
-- `php artisan app:seed-locales` — popula locales padrão
+- `php artisan db:seed --class=PermissionSeeder` — cria permissão inicial
+- `php artisan db:seed --class=AdminUserSeeder` — cria admin padrão e atribui permissão
+- `php artisan db:seed` — popula usuário teste padrão + permissões
 
-Login admin padrão: `test@example.com` / `test123`
+Login admin padrão: `test@example.com` / `test123` (precisa ter permissão `admin.access`)
 
 ## Comandos úteis
 
