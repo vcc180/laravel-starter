@@ -7,7 +7,7 @@ use Modules\Blog\Actions\GetPublishedPost;
 use Modules\Blog\Actions\ListPublishedPosts;
 use Modules\Blog\Models\Post;
 
-class BlogController extends \App\Http\Controllers\Controller
+class BlogController extends \App\Http\Controllers\Public\Controller
 {
     public function index(ListPublishedPosts $action, Request $request)
     {

@@ -2,19 +2,17 @@
 
 namespace Modules\Blog\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Modules\Blog\Actions\CreatePost;
 use Modules\Blog\Actions\DeletePost;
 use Modules\Blog\Actions\UpdatePost;
+use Modules\Blog\Http\Requests\Admin\PostRequest;
 use Modules\Blog\Models\Post;
 
-class PostController extends \App\Http\Controllers\Controller
+class PostController extends \App\Http\Controllers\Admin\Controller
 {
     public function index()
     {
-        $items = Post::query()->orderByDesc('id')->paginate(20);
-
-        return view('blog::admin.index', ['items' => $items]);
+        return view('blog::admin.index', ['items' => Post::query()->orderByDesc('id')->paginate(20)]);
     }
 
     public function create()
@@ -22,18 +20,9 @@ class PostController extends \App\Http\Controllers\Controller
         return view('blog::admin.create');
     }
 
-    public function store(Request $request, CreatePost $action)
+    public function store(PostRequest $request, CreatePost $action)
     {
-        $data = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'slug' => ['nullable', 'string', 'max:255', 'unique:blog_posts,slug'],
-            'body' => ['nullable', 'string'],
-            'blog_category_id' => ['nullable', 'exists:blog_categories,id'],
-            'tags' => ['nullable', 'array'],
-            'tags.*' => ['exists:blog_tags,id'],
-            'is_published' => ['sometimes', 'boolean'],
-        ]);
-        $action->handle($data);
+        $action->handle($request->validated());
 
         return redirect()->route('admin.blog.index')->with('status', 'Post criado.');
     }
@@ -48,18 +37,9 @@ class PostController extends \App\Http\Controllers\Controller
         return view('blog::admin.edit', ['item' => $post]);
     }
 
-    public function update(Request $request, Post $post, UpdatePost $action)
+    public function update(PostRequest $request, Post $post, UpdatePost $action)
     {
-        $data = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'slug' => ['nullable', 'string', 'max:255', 'unique:blog_posts,slug,' . $post->id],
-            'body' => ['nullable', 'string'],
-            'blog_category_id' => ['nullable', 'exists:blog_categories,id'],
-            'tags' => ['nullable', 'array'],
-            'tags.*' => ['exists:blog_tags,id'],
-            'is_published' => ['sometimes', 'boolean'],
-        ]);
-        $action->handle($post, $data);
+        $action->handle($post, $request->validated());
 
         return redirect()->route('admin.blog.index')->with('status', 'Post atualizado.');
     }

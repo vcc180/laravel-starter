@@ -2,19 +2,17 @@
 
 namespace Modules\Blog\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Modules\Blog\Actions\CreateTag;
 use Modules\Blog\Actions\DeleteTag;
 use Modules\Blog\Actions\UpdateTag;
+use Modules\Blog\Http\Requests\Admin\TagRequest;
 use Modules\Blog\Models\Tag;
 
 class TagController extends \App\Http\Controllers\Admin\Controller
 {
     public function index()
     {
-        $items = Tag::query()->orderByDesc('id')->paginate(20);
-
-        return view('blog::admin.tags.index', ['items' => $items]);
+        return view('blog::admin.tags.index', ['items' => Tag::query()->orderByDesc('id')->paginate(20)]);
     }
 
     public function create()
@@ -22,14 +20,9 @@ class TagController extends \App\Http\Controllers\Admin\Controller
         return view('blog::admin.tags.create');
     }
 
-    public function store(Request $request, CreateTag $action)
+    public function store(TagRequest $request, CreateTag $action)
     {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'slug' => ['nullable', 'string', 'max:255', 'unique:blog_tags,slug'],
-        ]);
-
-        $action->handle($data);
+        $action->handle($request->validated());
 
         return redirect()->route('admin.tags.index')->with('status', 'Tag criada.');
     }
@@ -39,14 +32,9 @@ class TagController extends \App\Http\Controllers\Admin\Controller
         return view('blog::admin.tags.edit', ['item' => $tag]);
     }
 
-    public function update(Request $request, Tag $tag, UpdateTag $action)
+    public function update(TagRequest $request, Tag $tag, UpdateTag $action)
     {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'slug' => ['nullable', 'string', 'max:255', 'unique:blog_tags,slug,' . $tag->id],
-        ]);
-
-        $action->handle($tag, $data);
+        $action->handle($tag, $request->validated());
 
         return redirect()->route('admin.tags.index')->with('status', 'Tag atualizada.');
     }
