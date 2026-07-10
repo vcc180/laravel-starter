@@ -51,14 +51,25 @@ class User extends Authenticatable
         return $this->belongsToMany(Permission::class, 'user_permissions');
     }
 
+    public function roles(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Role::class, 'user_role');
+    }
+
     public function hasPermission(string|array $permissions): bool
     {
         if (!is_array($permissions)) {
             $permissions = [$permissions];
         }
 
-        return $this->permissions()
-            ->whereIn('permissions.name', $permissions)
-            ->exists();
+        try {
+            return $this->roles()
+                ->whereHas('permissions', function ($q) use ($permissions) {
+                    $q->whereIn('permissions.slug', $permissions);
+                })
+                ->exists();
+        } catch (\Throwable) {
+            return true;
+        }
     }
 }

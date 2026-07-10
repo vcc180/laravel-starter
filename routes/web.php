@@ -16,6 +16,15 @@ Route::middleware(['web'])->prefix('admin')->name('admin.')->group(function () {
         Route::resource('locales', App\Http\Controllers\Admin\LocaleController::class)->except(['show']);
         Route::post('locales/{locale}/set-default', [App\Http\Controllers\Admin\LocaleController::class, 'setDefault'])->name('locales.set-default');
         Route::resource('permissions', App\Http\Controllers\Admin\PermissionController::class);
+        Route::resource('roles', App\Http\Controllers\Admin\RoleController::class);
+        Route::get('users', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('users.index');
+        Route::get('users/create', [App\Http\Controllers\Admin\UserController::class, 'create'])->name('users.create');
+        Route::post('users', [App\Http\Controllers\Admin\UserController::class, 'store'])->name('users.store');
+        Route::get('users/{user}', [App\Http\Controllers\Admin\UserController::class, 'edit'])->name('users.edit');
+        Route::put('users/{user}', [App\Http\Controllers\Admin\UserController::class, 'update'])->name('users.update');
+        Route::delete('users/{user}', [App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('users.destroy');
+        Route::put('users/{user}/roles', [App\Http\Controllers\Admin\UserRoleController::class, 'update'])->name('users.roles.update');
+        Route::get('users/{user}/roles', [App\Http\Controllers\Admin\UserRoleController::class, 'edit'])->name('users.roles.edit');
     });
 
     Route::get('/login', [App\Http\Controllers\Admin\Auth\LoginController::class, 'showLoginForm'])->name('login');

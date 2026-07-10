@@ -3,16 +3,16 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use App\Models\Permission;
+use App\Models\Role;
 use Illuminate\Database\Seeder;
 
 class AdminUserSeeder extends Seeder
 {
     public function run(): void
     {
-        $permission = Permission::updateOrCreate(
-            ['name' => 'admin.access'],
-            ['label' => 'Acesso administrativo']
+        $role = Role::updateOrCreate(
+            ['slug' => 'admin'],
+            ['name' => 'Admin', 'description' => 'Acesso total']
         );
 
         $admin = User::updateOrCreate(
@@ -23,7 +23,7 @@ class AdminUserSeeder extends Seeder
             ]
         );
 
-        $admin->permissions()->syncWithoutDetaching([$permission->id]);
+        $admin->roles()->syncWithoutDetaching([$role->id]);
 
         $this->command?->info("Admin user ready: {$admin->email}");
     }

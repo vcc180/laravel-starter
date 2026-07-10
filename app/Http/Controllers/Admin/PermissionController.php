@@ -17,11 +17,12 @@ class PermissionController extends Controller
         if ($term !== '') {
             $query->where(function ($q) use ($term) {
                 $q->where('name', 'like', "%{$term}%")
-                  ->orWhere('label', 'like', "%{$term}%");
+                  ->orWhere('slug', 'like', "%{$term}%")
+                  ->orWhere('module', 'like', "%{$term}%");
             });
         }
 
-        $items = $query->orderByDesc('id')->paginate(10)->withQueryString();
+        $items = $query->orderByDesc('id')->paginate(20)->withQueryString();
 
         return view('admin.permissions.index', [
             'items' => $items,
@@ -37,8 +38,10 @@ class PermissionController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => ['required', 'string', 'max:255', 'unique:permissions,name'],
-            'label' => ['nullable', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
+            'slug' => ['required', 'string', 'max:255', 'unique:permissions,slug'],
+            'module' => ['nullable', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
         ]);
 
         Permission::create($data);
@@ -59,8 +62,10 @@ class PermissionController extends Controller
     public function update(Request $request, Permission $permission)
     {
         $data = $request->validate([
-            'name' => ['required', 'string', 'max:255', 'unique:permissions,name,'.$permission->id],
-            'label' => ['nullable', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
+            'slug' => ['required', 'string', 'max:255', 'unique:permissions,slug,'.$permission->id],
+            'module' => ['nullable', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
         ]);
 
         $permission->update($data);

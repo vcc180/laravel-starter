@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Admin\ArticleRequest;
 use App\Models\Article;
+use Illuminate\Http\Request;
 
 class ArticleController extends AdminController
 {
@@ -21,6 +22,37 @@ class ArticleController extends AdminController
         'body' => ['nullable', 'string'],
         'is_active' => ['sometimes', 'boolean'],
     ];
+
+    protected function modelClass(): string
+    {
+        return Article::class;
+    }
+
+    public function create()
+    {
+        return view('admin.articles.create');
+    }
+
+    public function show(Article $article)
+    {
+        return view('admin.articles.show', ['item' => $article]);
+    }
+
+    public function edit(Article $article)
+    {
+        return view('admin.articles.edit', ['item' => $article]);
+    }
+
+    protected function searchable(): string
+    {
+        return 'title';
+    }
+
+    protected function applySearch($query, string $search): void
+    {
+        $query->where('title', 'like', "%{$search}%")
+              ->orWhere('body', 'like', "%{$search}%");
+    }
 
     protected function validationAttributeMessages(): array
     {

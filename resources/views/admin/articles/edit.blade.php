@@ -1,10 +1,10 @@
 @extends('layouts.admin')
 
-@section('title', 'Editar article #'.$item->id ?? 'Article')
+@section('title', 'Editar article')
 
 @section('content')
 <div class="card">
-    <div class="card-header"><h1 class="h5 mb-0">Editar article #{{ $item->id }}</h1></div>
+    <div class="card-header"><h1 class="h5 mb-0">Editar article</h1></div>
     <div class="card-body">
         <form action="{{ route('admin.articles.update', $item) }}" method="post">
             @csrf @method('PUT')

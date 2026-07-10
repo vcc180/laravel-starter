@@ -3,9 +3,10 @@
 /public/build
 /public/hot
 /public/storage
-/storage/*.key
 /.env
 /.env.backup
+/.env.testing
+.htpasswd
 .phpunit.result.cache
 docker-compose.override.yml
 IDE
@@ -13,3 +14,4 @@ IDE
 *.swp
 *.swo
 *~
+/scripts

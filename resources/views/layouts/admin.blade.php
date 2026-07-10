@@ -25,9 +25,22 @@
             <li>
                 <a href="{{ route('admin.articles.index') }}" class="nav-link text-white">Articles</a>
             </li>
-            @if(Auth::user()?->hasPermission('admin.access'))
+            <li>
+                <a href="{{ route('admin.locales.index') }}" class="nav-link text-white">Idiomas</a>
+            </li>
+            @if(auth()->check() && auth()->user()->hasPermission('permissions.manage'))
                 <li>
                     <a href="{{ route('admin.permissions.index') }}" class="nav-link text-white">Permissões</a>
+                </li>
+            @endif
+            @if(auth()->check() && auth()->user()->hasPermission('roles.manage'))
+                <li>
+                    <a href="{{ route('admin.roles.index') }}" class="nav-link text-white">Perfis</a>
+                </li>
+            @endif
+            @if(auth()->check() && auth()->user()->hasPermission('users.manage'))
+                <li>
+                    <a href="{{ route('admin.users.index') }}" class="nav-link text-white">Usuários</a>
                 </li>
             @endif
         </ul>
