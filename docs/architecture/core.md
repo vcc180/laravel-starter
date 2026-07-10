@@ -309,4 +309,5 @@ core/
 - Hooks > Events para extensibilidade de plugins.
 - Registry como ponto único.
 - Manifesto rico é contrato de primeira classe.
-- Phased rollout por Fases 1..5; sem nova features de negócio até Fase 3 básica pronta.
+- Phased rollout por Fases 1..7; sem nova features de negócio até Fase 3 básica pronta.
+- Fase 4 entrega Hook Manager e Event Bus como pontos de extensibilidade do Core.

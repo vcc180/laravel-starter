@@ -39,6 +39,8 @@ class AppServiceProvider extends ServiceProvider
                 ['themes' => base_path('themes')]
             ),
         ];
+
+        $this->app->singleton(\Core\Contracts\HookInterface::class, \Core\Hooks\HookManager::class);
     }
 
     public function boot(): void
