@@ -13,6 +13,9 @@ use Core\Contracts\ManagerInterface;
 use Core\Contracts\HookInterface;
 use Core\Exceptions\PackageException;
 use Core\Exceptions\HookException;
+use Core\Registry\PackageRegistry;
+use Core\Discovery\Discovery;
+use Core\Support\Manifest;
 use InvalidArgumentException;
 use RuntimeException;
 
