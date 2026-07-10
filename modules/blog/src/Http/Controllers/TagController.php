@@ -5,7 +5,7 @@ namespace Modules\Blog\Http\Controllers;
 use Illuminate\Http\Request;
 use Modules\Blog\Models\Tag;
 
-class TagController extends \App\Http\Controllers\Controller
+class TagController extends \App\Http\Controllers\Admin\Controller
 {
     public function index()
     {

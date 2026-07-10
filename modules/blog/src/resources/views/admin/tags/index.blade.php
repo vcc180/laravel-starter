@@ -1,4 +1,4 @@
-@extends('blog::admin.layout')
+@extends('layouts.admin')
 
 @section('title', 'Tags')
 

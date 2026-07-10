@@ -5,7 +5,7 @@ namespace Modules\Blog\Http\Controllers;
 use Illuminate\Http\Request;
 use Modules\Blog\Models\Category;
 
-class CategoryController extends \App\Http\Controllers\Controller
+class CategoryController extends \App\Http\Controllers\Admin\Controller
 {
     public function index()
     {
@@ -25,6 +25,8 @@ class CategoryController extends \App\Http\Controllers\Controller
             'name' => ['required', 'string', 'max:255'],
         ]);
 
+        $data = array_merge($data, ['slug' => str_slug($data['name'])]);
+
         Category::create($data);
 
         return redirect()->route('admin.categories.index')->with('status', 'Categoria criada.');
@@ -41,7 +43,7 @@ class CategoryController extends \App\Http\Controllers\Controller
             'name' => ['required', 'string', 'max:255'],
         ]);
 
-        $category->update($data);
+        $category->update(array_merge($data, ['slug' => str_slug($data['name'])]));
 
         return redirect()->route('admin.categories.index')->with('status', 'Categoria atualizada.');
     }
