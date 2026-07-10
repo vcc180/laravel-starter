@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\Controller;
+use App\Http\Requests\Admin\ExampleRequest;
 use App\Models\Example;
-use Illuminate\Http\Request;
 
 class ExampleController extends Controller
 {
@@ -28,14 +28,9 @@ class ExampleController extends Controller
         return view('admin.examples.create');
     }
 
-    public function store(Request $request)
+    public function store(ExampleRequest $request)
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'notes' => ['nullable', 'string'],
-        ]);
-
-        Example::create($validated);
+        Example::create($request->validated());
 
         return redirect()->route('admin.examples.index')->with('status', 'Registro criado.');
     }
@@ -50,14 +45,9 @@ class ExampleController extends Controller
         return view('admin.examples.edit', compact('example'));
     }
 
-    public function update(Request $request, Example $example)
+    public function update(ExampleRequest $request, Example $example)
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'notes' => ['nullable', 'string'],
-        ]);
-
-        $example->update($validated);
+        $example->update($request->validated());
 
         return redirect()->route('admin.examples.index')->with('status', 'Registro atualizado.');
     }

@@ -2,30 +2,30 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\Controller;
 use App\Http\Requests\Admin\ArticleRequest;
 use App\Models\Article;
-use Illuminate\Http\Request;
 
-class ArticleController extends AdminController
+class ArticleController extends Controller
 {
     protected string $viewPath = 'admin.articles';
     protected string $routePrefix = 'admin.articles';
-    protected string $modelClass = Article::class;
-    protected array $validateStore = [
-        'title' => ['required', 'string', 'max:255'],
-        'body' => ['nullable', 'string'],
-        'is_active' => ['sometimes', 'boolean'],
-    ];
-    protected array $validateUpdate = [
-        'title' => ['required', 'string', 'max:255'],
-        'body' => ['nullable', 'string'],
-        'is_active' => ['sometimes', 'boolean'],
-    ];
+    protected array $rulesStore = [];
+    protected array $rulesUpdate = [];
 
     protected function modelClass(): string
     {
         return Article::class;
+    }
+
+    protected function rulesStore(): array
+    {
+        return (new ArticleRequest())->rules();
+    }
+
+    protected function rulesUpdate(): array
+    {
+        return (new ArticleRequest())->rules();
     }
 
     public function create()

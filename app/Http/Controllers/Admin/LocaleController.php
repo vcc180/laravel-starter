@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Admin\Controller;
+use App\Http\Requests\Admin\LocaleRequest;
 use App\Models\Locale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
-class LocaleController extends \App\Http\Controllers\Admin\Controller
+class LocaleController extends Controller
 {
     public function index(Request $request)
     {
@@ -33,15 +34,9 @@ class LocaleController extends \App\Http\Controllers\Admin\Controller
         return view('admin.locales.create');
     }
 
-    public function store(Request $request)
+    public function store(LocaleRequest $request)
     {
-        $validated = $request->validate([
-            'locale' => ['required', 'string', 'max:8'],
-            'name' => ['required', 'string', 'max:255'],
-            'is_active' => ['sometimes', 'boolean'],
-        ]);
-
-        Locale::create($validated);
+        Locale::create($request->validated());
 
         return redirect()->route('admin.locales.index')->with('status', 'Idioma criado.');
     }
@@ -56,15 +51,9 @@ class LocaleController extends \App\Http\Controllers\Admin\Controller
         return view('admin.locales.edit', compact('locale'));
     }
 
-    public function update(Request $request, Locale $locale)
+    public function update(LocaleRequest $request, Locale $locale)
     {
-        $validated = $request->validate([
-            'locale' => ['required', 'string', 'max:8'],
-            'name' => ['required', 'string', 'max:255'],
-            'is_active' => ['sometimes', 'boolean'],
-        ]);
-
-        $locale->update($validated);
+        $locale->update($request->validated());
 
         return redirect()->route('admin.locales.index')->with('status', 'Idioma atualizado.');
     }
