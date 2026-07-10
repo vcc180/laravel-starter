@@ -11,13 +11,9 @@
     "psr-4": {
       "App\\": "app/",
       "Core\\": "core/",
+      "Core\\Registry\\": "core/Registry",
       "Database\\Seeders\\": "database/seeders/",
       "Modules\\Blog\\": "modules/blog/src/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Tests\\": "tests/"
     }
   },
   "autoload-dev": {
