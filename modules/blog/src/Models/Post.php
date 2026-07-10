@@ -2,11 +2,11 @@
 
 namespace Modules\Blog\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Post extends Model
+class Post extends BaseModel
 {
     protected $fillable = ['title', 'slug', 'body', 'blog_category_id', 'is_published'];
 

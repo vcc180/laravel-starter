@@ -2,11 +2,10 @@
 
 namespace Modules\Blog\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Tag extends Model
+class Tag extends BaseModel
 {
     protected $table = 'blog_tags';
 
