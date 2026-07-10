@@ -21,6 +21,6 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withProviders([
-        \Modules\Blog\Providers\BlogServiceProvider::class,
+        \App\Providers\AppServiceProvider::class,
     ])
     ->create();
