@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Role;
+use App\Http\Controllers\Admin\Controller;
+use App\Http\Requests\Admin\RoleRequest;
 use App\Models\Permission;
-use App\Http\Controllers\Controller;
+use App\Models\Role;
 use Illuminate\Http\Request;
 
 class RoleController extends Controller
@@ -39,15 +40,9 @@ class RoleController extends Controller
         return view('admin.roles.create', ['permissions' => $permissions]);
     }
 
-    public function store(Request $request)
+    public function store(RoleRequest $request)
     {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255', 'unique:roles,slug'],
-            'description' => ['nullable', 'string'],
-            'permissions' => ['array'],
-            'permissions.*' => ['exists:permissions,id'],
-        ]);
+        $data = $request->validated();
 
         $role = Role::create($data);
         $role->permissions()->sync($request->input('permissions', []));
@@ -75,7 +70,7 @@ class RoleController extends Controller
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255', 'unique:roles,slug,'.$role->id],
+            'slug' => ['required', 'string', 'max:255', 'unique:roles,slug,' . $role->id],
             'description' => ['nullable', 'string'],
             'permissions' => ['array'],
             'permissions.*' => ['exists:permissions,id'],
