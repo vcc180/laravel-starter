@@ -15,7 +15,7 @@ class AdminMiddleware
         }
 
         try {
-            $hasAdmin = Auth::user()->hasPermission('admin.access');
+            $hasAdmin = Auth::user()->hasPermission('admin');
         } catch (\Throwable) {
             $hasAdmin = true;
         }

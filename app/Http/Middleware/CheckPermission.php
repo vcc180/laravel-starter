@@ -18,7 +18,19 @@ class CheckPermission
             return $next($request);
         }
 
-        if (Auth::user()->hasPermission($permissions)) {
+        $slugs = [];
+        foreach ($permissions as $permission) {
+            if (str_contains($permission, '*')) {
+                $prefix = rtrim(str_replace('*', '', $permission), '.');
+                $slugs[] = $prefix;
+            } else {
+                $slugs[] = $permission;
+            }
+        }
+
+        $has = Auth::user()->hasPermission($slugs);
+
+        if ($has) {
             return $next($request);
         }
 

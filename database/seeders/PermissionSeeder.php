@@ -10,15 +10,15 @@ class PermissionSeeder extends Seeder
     public function run(): void
     {
         $permissions = [
-            ['name' => 'Acesso administrativo', 'slug' => 'admin.access', 'module' => 'core', 'description' => 'Acesso à área admin'],
-            ['name' => 'Ver artigos', 'slug' => 'articles.view', 'module' => 'articles', 'description' => 'Visualizar artigos'],
-            ['name' => 'Criar artigos', 'slug' => 'articles.create', 'module' => 'articles', 'description' => 'Criar artigos'],
-            ['name' => 'Editar artigos', 'slug' => 'articles.edit', 'module' => 'articles', 'description' => 'Editar artigos'],
-            ['name' => 'Excluir artigos', 'slug' => 'articles.delete', 'module' => 'articles', 'description' => 'Excluir artigos'],
-            ['name' => 'Gerenciar usuários', 'slug' => 'users.manage', 'module' => 'users', 'description' => 'Gerenciar usuários'],
-            ['name' => 'Gerenciar permissões', 'slug' => 'permissions.manage', 'module' => 'acl', 'description' => 'Gerenciar permissões e perfis'],
-            ['name' => 'Gerenciar perfis', 'slug' => 'roles.manage', 'module' => 'acl', 'description' => 'Gerenciar perfis'],
-            ['name' => 'Gerenciar repositório', 'slug' => 'repository.manage', 'module' => 'system', 'description' => 'Instalar/remover módulos, plugins e temas'],
+            ['name' => 'Acesso administrativo', 'slug' => 'admin', 'module' => 'core', 'description' => 'Acesso à área admin'],
+            ['name' => 'Gerenciar exemplos', 'slug' => 'example', 'module' => 'examples', 'description' => 'Acesso completo a exemplos'],
+            ['name' => 'Gerenciar artigos', 'slug' => 'article', 'module' => 'articles', 'description' => 'Acesso completo a artigos'],
+            ['name' => 'Gerenciar locales', 'slug' => 'locale', 'module' => 'locales', 'description' => 'Acesso completo a locales'],
+            ['name' => 'Gerenciar permissões', 'slug' => 'permission', 'module' => 'acl', 'description' => 'Gerenciar permissões'],
+            ['name' => 'Gerenciar perfis', 'slug' => 'role', 'module' => 'acl', 'description' => 'Gerenciar perfis/roles'],
+            ['name' => 'Gerenciar usuários', 'slug' => 'user', 'module' => 'users', 'description' => 'Gerenciar usuários'],
+            ['name' => 'Gerenciar repositório', 'slug' => 'repository', 'module' => 'system', 'description' => 'Instalar/remover módulos, plugins e temas'],
+            ['name' => 'Gerenciar blog', 'slug' => 'blog', 'module' => 'blog', 'description' => 'Acesso completo ao blog'],
         ];
 
         foreach ($permissions as $permission) {

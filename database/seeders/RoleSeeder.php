@@ -16,11 +16,8 @@ class RoleSeeder extends Seeder
         $viewer = Role::updateOrCreate(['slug' => 'viewer'], ['name' => 'Visualizador', 'description' => 'Somente leitura']);
 
         $all = Permission::all();
-        $editorPerms = $all->whereIn('slug', ['articles.view', 'articles.create', 'articles.edit']);
-        $viewerPerms = $all->whereIn('slug', ['articles.view', 'admin.access']);
-
-        $editorPerms = $all->whereIn('slug', ['articles.view', 'articles.create', 'articles.edit'])->pluck('id')->all();
-        $viewerPerms = $all->whereIn('slug', ['articles.view', 'admin.access'])->pluck('id')->all();
+        $editorPerms = $all->whereIn('slug', ['article.*', 'locale.*'])->pluck('id')->all();
+        $viewerPerms = $all->whereIn('slug', ['article.*', 'admin.access'])->pluck('id')->all();
         $adminPerms = $all->pluck('id')->all();
 
         $admin->permissions()->sync($adminPerms);
