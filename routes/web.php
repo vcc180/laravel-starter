@@ -41,3 +41,8 @@ if (file_exists($moduleRoutePath)) {
     require $moduleRoutePath;
 }
 
+$publicModuleRoutePath = base_path('modules/blog/routes/public.php');
+if (file_exists($publicModuleRoutePath)) {
+    require $publicModuleRoutePath;
+}
+

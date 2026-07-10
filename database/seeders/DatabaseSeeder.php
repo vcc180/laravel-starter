@@ -14,7 +14,5 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             AdminUserSeeder::class,
         ]);
-
-        User::factory()->count(5)->create();
     }
 }

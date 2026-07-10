@@ -25,8 +25,9 @@ class CategoryController extends \App\Http\Controllers\Admin\Controller
             'name' => ['required', 'string', 'max:255'],
         ]);
 
-        $data = array_merge($data, ['slug' => str_slug($data['name'])]);
-
+        $data = array_merge($data, [
+            'slug' => \Illuminate\Support\Str::slug($data['name'] ?? ''),
+        ]);
         Category::create($data);
 
         return redirect()->route('admin.categories.index')->with('status', 'Categoria criada.');
@@ -43,8 +44,9 @@ class CategoryController extends \App\Http\Controllers\Admin\Controller
             'name' => ['required', 'string', 'max:255'],
         ]);
 
-        $category->update(array_merge($data, ['slug' => str_slug($data['name'])]));
-
+        $category->update(array_merge($data, [
+            'slug' => \Illuminate\Support\Str::slug($data['name'] ?? ''),
+        ]));
         return redirect()->route('admin.categories.index')->with('status', 'Categoria atualizada.');
     }
 

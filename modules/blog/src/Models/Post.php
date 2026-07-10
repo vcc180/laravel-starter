@@ -10,6 +10,8 @@ class Post extends Model
 {
     protected $fillable = ['title', 'slug', 'body', 'blog_category_id', 'is_published'];
 
+    protected $table = 'blog_posts';
+
     protected $casts = [
         'is_published' => 'boolean',
     ];

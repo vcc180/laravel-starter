@@ -30,21 +30,14 @@ class RepositoryController extends Controller
 
     public function install(Request $request, string $type, string $slug)
     {
-        $request->merge(['type' => $type, 'slug' => $slug]);
-
-        $validator = Validator::make($request->all(), [
+        $validated = Validator::make($request->all(), [
             'type' => 'required|in:module,plugin,theme',
             'slug' => 'required|string|max:255',
-        ]);
+        ])->validateWithBag('install');
 
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
-
-        $validated = $validator->validated();
         $type = $validated['type'];
         $slug = $validated['slug'];
-        $packagePath = $root.'/'.$slug;
+        $packagePath = base_path($this->typePath($type).'/'.$slug);
 
         if (!File::exists($packagePath)) {
             return back()->with('error', "Pacote não encontrado em {$packagePath}");
