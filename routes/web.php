@@ -25,9 +25,19 @@ Route::middleware(['web'])->prefix('admin')->name('admin.')->group(function () {
         Route::delete('users/{user}', [App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('users.destroy');
         Route::put('users/{user}/roles', [App\Http\Controllers\Admin\UserRoleController::class, 'update'])->name('users.roles.update');
         Route::get('users/{user}/roles', [App\Http\Controllers\Admin\UserRoleController::class, 'edit'])->name('users.roles.edit');
+
+        Route::get('repository', [App\Http\Controllers\Admin\RepositoryController::class, 'index'])->name('repository.index');
+        Route::post('repository/{type}/{slug}/install', [App\Http\Controllers\Admin\RepositoryController::class, 'install'])->name('repository.install');
+        Route::delete('repository/{type}/{slug}/uninstall', [App\Http\Controllers\Admin\RepositoryController::class, 'uninstall'])->name('repository.uninstall');
     });
 
     Route::get('/login', [App\Http\Controllers\Admin\Auth\LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [App\Http\Controllers\Admin\Auth\LoginController::class, 'login'])->name('login.store');
     Route::post('/logout', [App\Http\Controllers\Admin\Auth\LoginController::class, 'logout'])->name('logout');
 });
+
+$moduleRoutePath = base_path('modules/blog/routes/web.php');
+if (file_exists($moduleRoutePath)) {
+    require $moduleRoutePath;
+}
+

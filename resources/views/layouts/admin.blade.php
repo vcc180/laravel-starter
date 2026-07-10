@@ -43,6 +43,11 @@
                     <a href="{{ route('admin.users.index') }}" class="nav-link text-white">Usuários</a>
                 </li>
             @endif
+            @if(auth()->check() && auth()->user()->hasPermission('repository.manage'))
+                <li>
+                    <a href="{{ route('admin.repository.index') }}" class="nav-link text-white">Repositório</a>
+                </li>
+            @endif
         </ul>
         <hr>
         <div class="dropdown">

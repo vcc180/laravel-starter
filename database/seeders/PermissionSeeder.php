@@ -18,6 +18,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'Gerenciar usuários', 'slug' => 'users.manage', 'module' => 'users', 'description' => 'Gerenciar usuários'],
             ['name' => 'Gerenciar permissões', 'slug' => 'permissions.manage', 'module' => 'acl', 'description' => 'Gerenciar permissões e perfis'],
             ['name' => 'Gerenciar perfis', 'slug' => 'roles.manage', 'module' => 'acl', 'description' => 'Gerenciar perfis'],
+            ['name' => 'Gerenciar repositório', 'slug' => 'repository.manage', 'module' => 'system', 'description' => 'Instalar/remover módulos, plugins e temas'],
         ];
 
         foreach ($permissions as $permission) {

@@ -19,8 +19,12 @@ class RoleSeeder extends Seeder
         $editorPerms = $all->whereIn('slug', ['articles.view', 'articles.create', 'articles.edit']);
         $viewerPerms = $all->whereIn('slug', ['articles.view', 'admin.access']);
 
-        $admin->permissions()->sync($all->pluck('id')->all());
-        $editor->permissions()->sync($editorPerms->pluck('id')->all());
-        $viewer->permissions()->sync($viewerPerms->pluck('id')->all());
+        $editorPerms = $all->whereIn('slug', ['articles.view', 'articles.create', 'articles.edit'])->pluck('id')->all();
+        $viewerPerms = $all->whereIn('slug', ['articles.view', 'admin.access'])->pluck('id')->all();
+        $adminPerms = $all->pluck('id')->all();
+
+        $admin->permissions()->sync($adminPerms);
+        $editor->permissions()->sync($editorPerms);
+        $viewer->permissions()->sync($viewerPerms);
     }
 }

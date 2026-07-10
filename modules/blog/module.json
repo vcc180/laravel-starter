@@ -1,0 +1,20 @@
+{
+  "_comment": "Manifesto simplificado tipo composer, mas com campos para autoload",
+  "name": "vcc180/blog",
+  "description": "Blog module",
+  "type": "laravel-module",
+  "version": "1.0.0",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Modules\\Blog\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Modules\\Blog\\Providers\\BlogServiceProvider"
+      ]
+    }
+  }
+}

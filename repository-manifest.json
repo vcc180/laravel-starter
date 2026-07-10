@@ -1,0 +1,30 @@
+{
+  "name": "vcc180/laravel-starter-repository",
+  "description": "Manifesto de pacotes disponíveis no repositório interno",
+  "packages": [
+    {
+      "name": "Blog",
+      "slug": "blog",
+      "type": "module",
+      "version": "1.0.0",
+      "description": "Posts, categorias e tags",
+      "provides": ["routes", "migrations", "views"]
+    },
+    {
+      "name": "SEO",
+      "slug": "seo",
+      "type": "plugin",
+      "version": "0.1.0",
+      "description": "Meta tags e sitemap",
+      "provides": ["routes", "views"]
+    },
+    {
+      "name": "Institucional Theme",
+      "slug": "institutional",
+      "type": "theme",
+      "version": "0.2.0",
+      "description": "Tema base para apresentação institucional",
+      "provides": ["views"]
+    }
+  ]
+}
