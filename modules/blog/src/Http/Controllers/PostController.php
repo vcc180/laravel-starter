@@ -4,6 +4,8 @@ namespace Modules\Blog\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Modules\Blog\Actions\CreatePost;
+use Modules\Blog\Actions\DeletePost;
+use Modules\Blog\Actions\UpdatePost;
 use Modules\Blog\Models\Post;
 
 class PostController extends \App\Http\Controllers\Controller
@@ -31,7 +33,7 @@ class PostController extends \App\Http\Controllers\Controller
             'tags.*' => ['exists:blog_tags,id'],
             'is_published' => ['sometimes', 'boolean'],
         ]);
-        $post = $action->handle($data);
+        $action->handle($data);
 
         return redirect()->route('admin.blog.index')->with('status', 'Post criado.');
     }
@@ -46,7 +48,7 @@ class PostController extends \App\Http\Controllers\Controller
         return view('blog::admin.edit', ['item' => $post]);
     }
 
-    public function update(Request $request, Post $post, \Modules\Blog\Actions\UpdatePost $action)
+    public function update(Request $request, Post $post, UpdatePost $action)
     {
         $data = $request->validate([
             'title' => ['required', 'string', 'max:255'],
@@ -62,7 +64,7 @@ class PostController extends \App\Http\Controllers\Controller
         return redirect()->route('admin.blog.index')->with('status', 'Post atualizado.');
     }
 
-    public function destroy(Post $post, \Modules\Blog\Actions\DeletePost $action)
+    public function destroy(Post $post, DeletePost $action)
     {
         $action->handle($post);
 
