@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Permission extends Model
+class Permission extends BaseModel
 {
-    protected $fillable = ['name', 'slug', 'module', 'description'];
+    protected $fillable = ['name', 'slug', 'module', 'description', 'status'];
 
     public function roles(): BelongsToMany
     {

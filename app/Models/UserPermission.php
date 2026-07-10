@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserPermission extends Model
+class UserPermission extends BaseModel
 {
     public $timestamps = true;
 
