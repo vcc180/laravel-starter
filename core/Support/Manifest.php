@@ -2,12 +2,13 @@
 
 namespace Core\Support;
 
-use Core\Contracts\ResultInterface;
 use InvalidArgumentException;
 
 final class Manifest
 {
     private array $data;
+
+    private string $path;
 
     public function __construct(string $path)
     {
@@ -15,6 +16,7 @@ final class Manifest
             throw new InvalidArgumentException("Manifest file not found or unreadable: {$path}");
         }
 
+        $this->path = $path;
         $content = file_get_contents($path);
         $data = json_decode($content, true);
 
@@ -48,5 +50,37 @@ final class Manifest
     public function get(string $key, mixed $default = null): mixed
     {
         return $this->data[$key] ?? $default;
+    }
+
+    public function isValid(): bool
+    {
+        return isset($this->data['name']);
+    }
+
+    public function getSlug(): ?string
+    {
+        $slug = $this->data['slug'] ?? ($this->data['name'] ?? null);
+
+        if ($slug !== null && is_string($slug)) {
+            return strtolower(trim($slug));
+        }
+
+        return null;
+    }
+
+    public function getVersion(): ?string
+    {
+        $version = $this->data['version'] ?? null;
+
+        if ($version !== null && is_string($version)) {
+            return $version;
+        }
+
+        return null;
+    }
+
+    public function getBasePath(): string
+    {
+        return dirname($this->path);
     }
 }

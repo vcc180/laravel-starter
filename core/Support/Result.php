@@ -2,6 +2,8 @@
 
 namespace Core\Support;
 
+use Core\Contracts\ResultInterface;
+
 final class Result implements ResultInterface
 {
     private bool $ok;

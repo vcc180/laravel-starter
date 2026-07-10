@@ -39,6 +39,8 @@ final class Discovery
                 continue;
             }
 
+            $results[$type] = [];
+
             $entries = new RecursiveIteratorIterator(
                 new RecursiveDirectoryIterator($path, \FilesystemIterator::SKIP_DOTS)
             );
