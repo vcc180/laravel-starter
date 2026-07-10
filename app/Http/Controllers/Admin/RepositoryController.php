@@ -30,6 +30,8 @@ class RepositoryController extends Controller
 
     public function install(Request $request, string $type, string $slug)
     {
+        $request->merge(['type' => $type, 'slug' => $slug]);
+
         $validator = Validator::make($request->all(), [
             'type' => 'required|in:module,plugin,theme',
             'slug' => 'required|string|max:255',
@@ -42,8 +44,6 @@ class RepositoryController extends Controller
         $validated = $validator->validated();
         $type = $validated['type'];
         $slug = $validated['slug'];
-
-        $root = base_path($this->typePath($type));
         $packagePath = $root.'/'.$slug;
 
         if (!File::exists($packagePath)) {
