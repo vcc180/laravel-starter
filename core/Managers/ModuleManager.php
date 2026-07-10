@@ -6,7 +6,6 @@ use Core\Contracts\ModuleInterface;
 use Core\Contracts\HookInterface;
 use Core\Contracts\ResultInterface;
 use Core\Contracts\RegistryInterface;
-use Core\Contracts\ProviderInterface;
 use Core\Exceptions\PackageException;
 use Core\Support\Result;
 use InvalidArgumentException;
@@ -59,13 +58,6 @@ final class ModuleManager extends PackageManager
         }
 
         $provider = $this->resolveModuleProvider($slug);
-
-        if ($provider instanceof ProviderInterface) {
-            $provider->register();
-        } elseif ($provider !== null) {
-            $provider::register();
-        }
-
         $this->registerRoutes($provider, $slug);
         $this->registerViews($provider, $slug);
         $this->registerMigrations($provider, $slug);
@@ -75,10 +67,6 @@ final class ModuleManager extends PackageManager
             'status' => 'loaded',
             'instance' => $provider,
         ]);
-
-        if ($this->registry !== null) {
-            $this->registry->put('module.'.$slug, $provider);
-        }
 
         return $provider;
     }
@@ -97,12 +85,12 @@ final class ModuleManager extends PackageManager
         return parent::boot();
     }
 
-    protected function bootPackage(string $slug): void
+    public function bootPackage(string $slug): void
     {
         $this->load($slug);
     }
 
-    protected function shutdownPackage(string $slug): void
+    public function shutdownPackage(string $slug): void
     {
         $pkg = $this->packageRegistry->get($slug);
 
@@ -112,7 +100,7 @@ final class ModuleManager extends PackageManager
 
         $provider = $pkg['instance'] ?? null;
 
-        if ($provider instanceof ProviderInterface) {
+        if ($provider instanceof ModuleInterface) {
             $provider->shutdown();
         } elseif ($provider !== null && method_exists($provider, 'shutdown')) {
             $provider::shutdown();

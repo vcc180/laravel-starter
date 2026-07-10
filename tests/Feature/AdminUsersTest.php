@@ -10,9 +10,11 @@ class AdminUsersTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected function seeder()
+    protected function setUp(): void
     {
-        $this->artisan('db:seed', ['--force' => true]);
+        parent::setUp();
+
+        $this->seed();
     }
 
     public function test_admin_users_page_loads()

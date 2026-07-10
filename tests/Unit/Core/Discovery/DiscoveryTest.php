@@ -14,8 +14,8 @@ class DiscoveryTest extends TestCase
         mkdir($root.'/plugins/seo', 0777, true);
         mkdir($root.'/themes/default', 0777, true);
         file_put_contents($root.'/modules/blog/module.json', '{}');
-        file_put_contents($root.'/plugins/seo/module.json', '{}');
-        file_put_contents($root.'/themes/default/module.json', '{}');
+        file_put_contents($root.'/plugins/seo/plugin.json', '{}');
+        file_put_contents($root.'/themes/default/theme.json', '{}');
 
         $discovery = new Discovery([
             'modules' => $root.'/modules',
@@ -29,8 +29,8 @@ class DiscoveryTest extends TestCase
         $this->assertCount(1, $result['plugins']);
         $this->assertCount(1, $result['themes']);
         $this->assertStringContainsString('modules/blog/module.json', $result['modules'][0]);
-        $this->assertStringContainsString('plugins/seo/module.json', $result['plugins'][0]);
-        $this->assertStringContainsString('themes/default/module.json', $result['themes'][0]);
+        $this->assertStringContainsString('plugins/seo/plugin.json', $result['plugins'][0]);
+        $this->assertStringContainsString('themes/default/theme.json', $result['themes'][0]);
     }
 
     public function test_scan_ignores_directories_without_manifest(): void

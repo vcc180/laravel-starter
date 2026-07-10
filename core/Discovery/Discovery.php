@@ -46,7 +46,17 @@ final class Discovery
             );
 
             foreach ($entries as $entry) {
-                if (strcasecmp($entry->getFilename(), 'module.json') !== 0) {
+                $manifestFile = $entry->getFilename();
+
+                if ($type === 'plugins' && strcasecmp($manifestFile, 'plugin.json') !== 0) {
+                    continue;
+                }
+
+                if ($type === 'themes' && strcasecmp($manifestFile, 'theme.json') !== 0) {
+                    continue;
+                }
+
+                if (!in_array(strtolower($manifestFile), ['module.json', 'plugin.json', 'theme.json'], true)) {
                     continue;
                 }
 

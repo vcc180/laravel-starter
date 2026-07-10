@@ -27,11 +27,11 @@ final class PluginManager extends PackageManager
     {
         $path = $this->resolvePluginPath($name, $config);
 
-        if (!$path || !is_file($path.'/module.json')) {
+        if (!$path || !is_file($path.'/plugin.json')) {
             return new Result(false, 'Manifesto do plugin não encontrado.', null);
         }
 
-        $manifest = new Manifest($path.'/module.json', $path);
+        $manifest = new Manifest($path.'/plugin.json', $path);
 
         if (!$manifest->isValid()) {
             return new Result(false, 'Manifesto inválido.', null);
@@ -73,12 +73,12 @@ final class PluginManager extends PackageManager
         return $provider;
     }
 
-    protected function bootPackage(string $slug): void
+    public function bootPackage(string $slug): void
     {
         $this->load($slug);
     }
 
-    protected function shutdownPackage(string $slug): void
+    public function shutdownPackage(string $slug): void
     {
         $pkg = $this->packageRegistry->get($slug);
 

@@ -3,21 +3,22 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\InstalledPackage;
+use Core\Installers\PackageInstaller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Validator;
 
 class RepositoryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $manifestPath = base_path('repository-manifest.json');
-        $manifest = File::exists($manifestPath) ? json_decode(File::get($manifestPath), true) : ['packages' => []];
+        $manifest = \Illuminate\Support\Facades\File::exists($manifestPath)
+            ? json_decode(\Illuminate\Support\Facades\File::get($manifestPath), true)
+            : ['packages' => []];
+
         $packages = $manifest['packages'] ?? [];
 
-        $installed = InstalledPackage::all()->keyBy(fn($i) => $i->type.'/'.$i->slug);
+        $installed = \App\Models\InstalledPackage::all()
+            ->keyBy(fn ($item) => $item->type . '/' . $item->slug);
 
         $types = ['module' => 'modules', 'plugin' => 'plugins', 'theme' => 'themes'];
 
@@ -28,99 +29,41 @@ class RepositoryController extends Controller
         ]);
     }
 
-    public function install(Request $request, string $type, string $slug)
+    public function install(Request $request, string $type, string $slug, PackageInstaller $installer)
     {
-        $validated = Validator::make($request->all(), [
-            'type' => 'required|in:module,plugin,theme',
-            'slug' => 'required|string|max:255',
-        ])->validateWithBag('install');
-
-        $type = $validated['type'];
-        $slug = $validated['slug'];
-        $packagePath = base_path($this->typePath($type).'/'.$slug);
-
-        if (!File::exists($packagePath)) {
-            return back()->with('error', "Pacote não encontrado em {$packagePath}");
-        }
-
-        $moduleJsonPath = $packagePath.'/module.json';
-        if (!File::exists($moduleJsonPath)) {
-            return back()->with('error', 'Arquivo module.json ausente no pacote');
-        }
-
-        $module = json_decode(File::get($moduleJsonPath), true);
-
-        InstalledPackage::updateOrCreate(
-            ['type' => $type, 'slug' => $slug],
-            [
-                'name' => $module['name'] ?? $slug,
-                'version' => $module['version'] ?? '1.0.0',
-                'status' => 'active',
-            ]
-        );
-
-        if (!empty($module['provides']) && is_array($module['provides'])) {
-            if (in_array('migrations', $module['provides'], true)) {
-                try {
-                    Artisan::call('migrate', ['--path' => "modules/{$slug}/database/migrations", '--force' => true]);
-                } catch (\Throwable $e) {
-                    // migrations do módulo podem falhar se já executadas; não bloquear instalação
-                }
-            }
-        }
-
-        $provider = $packagePath.'/src/Providers/'.($module['provider'] ?? ucfirst($slug).'ServiceProvider.php');
-        if (File::exists($provider) && class_exists($ns = $this->guessProviderClass($slug))) {
-            // ServiceProvider discovery é feito pelo package:discover; manter instalação não destrutiva
-        }
-
-        Artisan::call('view:clear');
-        Artisan::call('route:clear');
-
-        return back()->with('success', 'Pacote instalado com sucesso.');
-    }
-
-    public function uninstall(Request $request, string $type, string $slug)
-    {
-        $validator = Validator::make($request->all(), [
+        $validated = $request->validate([
             'type' => 'required|in:module,plugin,theme',
             'slug' => 'required|string|max:255',
         ]);
 
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
-
-        $validated = $validator->validated();
         $type = $validated['type'];
         $slug = $validated['slug'];
 
-        $package = InstalledPackage::where('type', $type)->where('slug', $slug)->first();
+        $result = $installer->install($type, $slug);
 
-        if (!$package) {
-            return back()->with('error', 'Pacote não está instalado.');
+        if (!$result->isOk()) {
+            return back()->with('error', $result->message());
         }
 
-        InstalledPackage::where('type', $type)->where('slug', $slug)->delete();
-
-        Artisan::call('view:clear');
-        Artisan::call('route:clear');
-
-        return back()->with('success', 'Pacote desinstalado. Arquivos mantidos para reinstalação.');
+        return back()->with('success', $result->message());
     }
 
-    private function typePath(string $type): string
+    public function uninstall(Request $request, string $type, string $slug, PackageInstaller $installer)
     {
-        return match ($type) {
-            'plugin' => 'plugins',
-            'theme' => 'themes',
-            default => 'modules',
-        };
-    }
+        $validated = $request->validate([
+            'type' => 'required|in:module,plugin,theme',
+            'slug' => 'required|string|max:255',
+        ]);
 
-    private function guessProviderClass(string $slug): string
-    {
-        $studly = str_replace(['-', '_'], '', ucwords($slug, '_-'));
-        return 'Modules\\'.ucfirst($slug).'\\Providers\\'.ucfirst($studly).'ServiceProvider';
+        $type = $validated['type'];
+        $slug = $validated['slug'];
+
+        $result = $installer->types()[$type]?->uninstall($slug);
+
+        if (!$result->isOk()) {
+            return back()->with('error', $result->message());
+        }
+
+        return back()->with('success', $result->message());
     }
 }

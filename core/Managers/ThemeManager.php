@@ -27,11 +27,11 @@ final class ThemeManager extends PackageManager
     {
         $path = $this->resolveThemePath($name, $config);
 
-        if (!$path || !is_file($path.'/module.json')) {
+        if (!$path || !is_file($path.'/theme.json')) {
             return new Result(false, 'Manifesto do tema não encontrado.', null);
         }
 
-        $manifest = new Manifest($path.'/module.json', $path);
+        $manifest = new Manifest($path.'/theme.json', $path);
 
         if (!$manifest->isValid()) {
             return new Result(false, 'Manifesto inválido.', null);
@@ -72,12 +72,12 @@ final class ThemeManager extends PackageManager
         return $provider;
     }
 
-    protected function bootPackage(string $slug): void
+    public function bootPackage(string $slug): void
     {
         $this->load($slug);
     }
 
-    protected function shutdownPackage(string $slug): void
+    public function shutdownPackage(string $slug): void
     {
         $pkg = $this->packageRegistry->get($slug);
 
