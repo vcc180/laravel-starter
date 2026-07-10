@@ -3,6 +3,9 @@
 namespace Modules\Blog\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Modules\Blog\Actions\CreateTag;
+use Modules\Blog\Actions\DeleteTag;
+use Modules\Blog\Actions\UpdateTag;
 use Modules\Blog\Models\Tag;
 
 class TagController extends \App\Http\Controllers\Admin\Controller
@@ -19,14 +22,14 @@ class TagController extends \App\Http\Controllers\Admin\Controller
         return view('blog::admin.tags.create');
     }
 
-    public function store(Request $request)
+    public function store(Request $request, CreateTag $action)
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', 'unique:blog_tags,slug'],
         ]);
 
-        Tag::create($data);
+        $action->handle($data);
 
         return redirect()->route('admin.tags.index')->with('status', 'Tag criada.');
     }
@@ -36,21 +39,21 @@ class TagController extends \App\Http\Controllers\Admin\Controller
         return view('blog::admin.tags.edit', ['item' => $tag]);
     }
 
-    public function update(Request $request, Tag $tag)
+    public function update(Request $request, Tag $tag, UpdateTag $action)
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', 'unique:blog_tags,slug,' . $tag->id],
         ]);
 
-        $tag->update($data);
+        $action->handle($tag, $data);
 
         return redirect()->route('admin.tags.index')->with('status', 'Tag atualizada.');
     }
 
-    public function destroy(Tag $tag)
+    public function destroy(Tag $tag, DeleteTag $action)
     {
-        $tag->delete();
+        $action->handle($tag);
 
         return back()->with('status', 'Tag removida.');
     }

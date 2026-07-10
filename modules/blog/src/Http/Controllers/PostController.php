@@ -3,6 +3,7 @@
 namespace Modules\Blog\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Modules\Blog\Actions\CreatePost;
 use Modules\Blog\Models\Post;
 
 class PostController extends \App\Http\Controllers\Controller
@@ -19,7 +20,7 @@ class PostController extends \App\Http\Controllers\Controller
         return view('blog::admin.create');
     }
 
-    public function store(Request $request)
+    public function store(Request $request, CreatePost $action)
     {
         $data = $request->validate([
             'title' => ['required', 'string', 'max:255'],
@@ -30,11 +31,7 @@ class PostController extends \App\Http\Controllers\Controller
             'tags.*' => ['exists:blog_tags,id'],
             'is_published' => ['sometimes', 'boolean'],
         ]);
-
-        $post = Post::create($data);
-        if (!empty($data['tags'])) {
-            $post->tags()->sync($data['tags']);
-        }
+        $post = $action->handle($data);
 
         return redirect()->route('admin.blog.index')->with('status', 'Post criado.');
     }
@@ -49,7 +46,7 @@ class PostController extends \App\Http\Controllers\Controller
         return view('blog::admin.edit', ['item' => $post]);
     }
 
-    public function update(Request $request, Post $post)
+    public function update(Request $request, Post $post, \Modules\Blog\Actions\UpdatePost $action)
     {
         $data = $request->validate([
             'title' => ['required', 'string', 'max:255'],
@@ -60,19 +57,14 @@ class PostController extends \App\Http\Controllers\Controller
             'tags.*' => ['exists:blog_tags,id'],
             'is_published' => ['sometimes', 'boolean'],
         ]);
-
-        $post->update($data);
-        if (isset($data['tags'])) {
-            $post->tags()->sync($data['tags']);
-        }
+        $action->handle($post, $data);
 
         return redirect()->route('admin.blog.index')->with('status', 'Post atualizado.');
     }
 
-    public function destroy(Post $post)
+    public function destroy(Post $post, \Modules\Blog\Actions\DeletePost $action)
     {
-        $post->tags()->detach();
-        $post->delete();
+        $action->handle($post);
 
         return back()->with('status', 'Post removido.');
     }
