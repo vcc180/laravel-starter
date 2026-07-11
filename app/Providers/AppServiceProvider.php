@@ -80,6 +80,18 @@ class AppServiceProvider extends ServiceProvider
             }
         }
 
+        // Acesso manual garantido para módulos principais enquanto o discovery automático é validado
+        $manual = [
+            ['name' => 'Blog', 'route' => 'admin.blog.index', 'icon' => 'bi bi-file-earmark-text'],
+            ['name' => 'Categorias', 'route' => 'admin.categories.index', 'icon' => 'bi bi-folder2-open'],
+        ];
+
+        foreach ($manual as $item) {
+            if (\Illuminate\Support\Facades\Route::has($item['route'])) {
+                $menu[] = $item;
+            }
+        }
+
         try {
             $modules->boot();
 
@@ -91,7 +103,7 @@ class AppServiceProvider extends ServiceProvider
                 foreach ($scanned as $path) {
                     try {
                         $result = $modules->register(basename(dirname($path)));
-                        logger()->info('sidebar_discovery_register', ['path' => $path, 'result' => $result->isOk(), 'error' => $result->error()]);
+                        logger()->info('sidebar_discovery_register', ['path' => $path, 'result' => $result->isOk(), 'message' => $result->message()]);
                     } catch (\Throwable $e) {
                         logger()->warning('sidebar_register_failed', ['path' => $path, 'error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
                     }
