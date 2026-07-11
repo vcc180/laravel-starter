@@ -27,6 +27,17 @@
                 <label class="form-label">Confirmar senha</label>
                 <input type="password" name="password_confirmation" class="form-control" required minlength="6">
             </div>
+            <div class="mb-3">
+                <label class="form-label">Perfil</label>
+                <select name="roles[]" class="form-select" multiple>
+                    <option value="">Sem perfil</option>
+                    @foreach(\App\Models\Role::orderBy('name')->get() as $role)
+                        <option value="{{ $role->id }}">{{ $role->name }}</option>
+                    @endforeach
+                </select>
+                <div class="form-text">Segure Ctrl/Cmd para selecionar mais de um.</div>
+                @error('roles') <div class="text-danger">{{ $message }}</div> @enderror
+            </div>
             <button class="btn btn-primary" type="submit">Salvar</button>
             <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">Cancelar</a>
         </form>

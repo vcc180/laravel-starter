@@ -26,7 +26,7 @@ Route::middleware(['web'])->prefix('admin')->name('admin.')->group(function () {
             Route::put('users/{user}', [App\Http\Controllers\Admin\UserController::class, 'update'])->name('users.update');
             Route::delete('users/{user}', [App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('users.destroy');
             Route::put('users/{user}/roles', [App\Http\Controllers\Admin\UserRoleController::class, 'update'])->name('users.roles.update');
-            Route::get('users/{user}/roles', [App\Http\Controllers\Admin\UserController::class, 'edit'])->name('users.roles.edit');
+            Route::get('users/{user}/roles', [App\Http\Controllers\Admin\UserRoleController::class, 'edit'])->name('users.roles.edit');
         });
 
         Route::middleware(CheckPermission::class.':repository.*')->group(function () {
