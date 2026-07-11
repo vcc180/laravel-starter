@@ -19,6 +19,9 @@ class PermissionSeeder extends Seeder
             ['name' => 'Gerenciar usuários', 'slug' => 'user', 'module' => 'users', 'description' => 'Gerenciar usuários'],
             ['name' => 'Gerenciar repositório', 'slug' => 'repository', 'module' => 'system', 'description' => 'Instalar/remover módulos, plugins e temas'],
             ['name' => 'Gerenciar blog', 'slug' => 'blog', 'module' => 'blog', 'description' => 'Acesso completo ao blog'],
+            ['name' => 'Gerenciar posts do blog', 'slug' => 'blog.posts', 'module' => 'blog', 'description' => 'Acesso a posts do blog'],
+            ['name' => 'Gerenciar categorias do blog', 'slug' => 'blog.categories', 'module' => 'blog', 'description' => 'Acesso a categorias do blog'],
+            ['name' => 'Gerenciar tags do blog', 'slug' => 'blog.tags', 'module' => 'blog', 'description' => 'Acesso a tags do blog'],
         ];
 
         foreach ($permissions as $permission) {

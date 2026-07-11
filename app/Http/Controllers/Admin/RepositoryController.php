@@ -29,35 +29,27 @@ class RepositoryController extends Controller
         ]);
     }
 
-    public function install(Request $request, string $type, string $slug, PackageInstaller $installer)
+    public function install(Request $request, string $type, string $slug)
     {
-        $validated = $request->validate([
-            'type' => 'required|in:module,plugin,theme',
-            'slug' => 'required|string|max:255',
-        ]);
-
-        $type = $validated['type'];
-        $slug = $validated['slug'];
-
+        $installer = app(\Core\Installers\PackageInstaller::class);
         $result = $installer->install($type, $slug);
 
         if (!$result->isOk()) {
-            return back()->with('error', $result->message());
+            return back()->with('error', $result->message() ?: 'Não foi possível instalar este pacote.');
         }
 
-        return back()->with('success', $result->message());
+        $defaultMessage = match ($type) {
+            'plugin' => 'Plugin instalado com sucesso.',
+            'theme' => 'Tema instalado com sucesso.',
+            default => 'Pacote instalado com sucesso.',
+        };
+
+        return back()->with('success', $defaultMessage);
     }
 
-    public function uninstall(Request $request, string $type, string $slug, PackageInstaller $installer)
+    public function uninstall(Request $request, string $type, string $slug)
     {
-        $validated = $request->validate([
-            'type' => 'required|in:module,plugin,theme',
-            'slug' => 'required|string|max:255',
-        ]);
-
-        $type = $validated['type'];
-        $slug = $validated['slug'];
-
+        $installer = app(\Core\Installers\PackageInstaller::class);
         $result = $installer->types()[$type]?->uninstall($slug);
 
         if (!$result->isOk()) {

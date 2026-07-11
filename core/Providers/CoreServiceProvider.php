@@ -10,6 +10,10 @@ use Core\Hooks\HookManager;
 use Core\Managers\ModuleManager;
 use Core\Managers\PluginManager;
 use Core\Managers\ThemeManager;
+use Core\Installers\PackageInstaller;
+use Core\Installers\ModuleInstaller;
+use Core\Installers\PluginInstaller;
+use Core\Installers\ThemeInstaller;
 
 class CoreServiceProvider extends ServiceProvider
 {

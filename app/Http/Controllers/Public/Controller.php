@@ -1,11 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Public;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-
-abstract class PublicController extends Controller
+abstract class Controller extends \App\Http\Controllers\Controller
 {
     //
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Admin\Controller;
 use App\Http\Requests\Admin\ArticleRequest;
 use App\Models\Article;
+use Illuminate\Http\Request;
 
 class ArticleController extends Controller
 {
@@ -18,14 +19,34 @@ class ArticleController extends Controller
         return Article::class;
     }
 
-    protected function rulesStore(): array
+    public function index(Request $request)
     {
-        return (new ArticleRequest())->rules();
+        $query = Article::query()
+            ->when($request->filled('q'), function ($q, $search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('body', 'like', "%{$search}%");
+            })
+            ->latest('id')
+            ->paginate(20);
+
+        return view('admin.articles.index', [
+            'items' => $query,
+            'term' => (string) $request->query('q', ''),
+        ]);
     }
 
-    protected function rulesUpdate(): array
+    public function store(ArticleRequest $request)
     {
-        return (new ArticleRequest())->rules();
+        Article::create($request->validated());
+
+        return redirect()->route('admin.articles.index')->with('status', 'Registro criado.');
+    }
+
+    public function update(ArticleRequest $request, Article $article)
+    {
+        $article->update($request->validated());
+
+        return redirect()->route('admin.articles.index')->with('status', 'Registro atualizado.');
     }
 
     public function create()

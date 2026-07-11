@@ -10,21 +10,18 @@ final class Result implements ResultInterface
 
     private string $message;
 
-    /**
-     * @var array<string, mixed>
-     */
-    private array $data;
+    /** @var array<string, mixed> */
+    private array $data = [];
 
     private int $code;
 
-    /**
-     * @param array<string, mixed> $data
-     */
-    private function __construct(bool $ok, string $message, array $data, int $code)
+    private ?Manifest $manifest = null;
+
+    public function __construct(bool $ok, string $message, ?array $data = null, int $code = 0)
     {
         $this->ok = $ok;
         $this->message = $message;
-        $this->data = $data;
+        $this->data = $data ?? [];
         $this->code = $code;
     }
 
@@ -36,6 +33,19 @@ final class Result implements ResultInterface
     public static function fail(string $message, array $data = [], int $code = 0): self
     {
         return new self(false, $message, $data, $code);
+    }
+
+    public function withManifest(Manifest $manifest): self
+    {
+        $clone = clone $this;
+        $clone->manifest = $manifest;
+
+        return $clone;
+    }
+
+    public function manifest(): ?Manifest
+    {
+        return $this->manifest;
     }
 
     public function isOk(): bool

@@ -11,7 +11,7 @@ class LoginController extends Controller
     public function showLoginForm(Request $request)
     {
         if (Auth::check()) {
-            if (!Auth::user()->hasPermission('admin.access')) {
+            if (!Auth::user()->hasPermission('admin')) {
                 Auth::logout();
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();
@@ -36,7 +36,7 @@ class LoginController extends Controller
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
 
-            if (!Auth::user()->hasPermission('admin.access')) {
+            if (!Auth::user()->hasPermission('admin')) {
                 Auth::logout();
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();

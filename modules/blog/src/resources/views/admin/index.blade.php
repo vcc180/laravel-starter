@@ -1,4 +1,12 @@
-@include('blog::admin.header')
+@extends('layouts.admin')
+
+@section('title', 'Blog posts')
+
+@section('content')
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h5 mb-0">Posts</h1>
+    <a href="{{ route('admin.blog.create') }}" class="btn btn-sm btn-primary">Novo post</a>
+</div>
 
 <form class="row g-2 mb-3" method="get" action="{{ route('admin.blog.index') }}">
     <div class="col-sm-8">
@@ -34,3 +42,4 @@
     </table>
 </div>
 <div class="mt-3">{{ $items->links() }}</div>
+@endsection

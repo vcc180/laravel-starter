@@ -1,13 +1,13 @@
 # Starter Laravel
 
-Starter reutilizável para projetos Laravel 11.x. Inclui estrutura base, admin mínimo e CRUDs de exemplo.
+Starter reutilizável para projetos Laravel 11.x. Inclui core modular, admin mínimo, RBAC/ACL, repository interno de módulos/plugins/themes e CRUDs de exemplo.
 
 ## Requisitos
 
 - PHP 8.2+
 - Composer
 - Node.js + npm
-- MySQL 8.x (ou SQLite se habilitado)
+- MySQL 8.x (ou SQLite para testes)
 - Extensões PHP: `pdo_mysql` (ou `pdo_sqlite`), `mbstring`, `openssl`
 
 ## Instalação
@@ -15,57 +15,50 @@ Starter reutilizável para projetos Laravel 11.x. Inclui estrutura base, admin m
 1. `composer install`
 2. copie `.env.example` para `.env`
 3. `php artisan key:generate`
-4. ajuste `.env` (veja abaixo)
+4. ajuste `.env`
 5. `php artisan migrate --seed`
 6. `php artisan serve`
 
-## .env (exemplo mínimo)
+Login admin padrão: `test@example.com` / `test123`
 
-```env
-APP_NAME="Starter Laravel"
-APP_ENV=local
-APP_DEBUG=true
-APP_URL=http://localhost:8000
-APP_LOCALE=pt-BR
-APP_FALLBACK_LOCALE=en
-APP_TIMEZONE=UTC
+## Core modular
 
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=starter_laravel
-DB_USERNAME=root
-DB_PASSWORD=
+- `core/` com Registry, Manifest, Discovery, DependencyResolver, HookManager, CoreServiceProvider
+- gestão por tipo:
+  - `modules/` — módulos instaláveis com migrations, rotas, views e manifest
+  - `plugins/` — plugins
+  - `themes/` — temas
+- instalação/remoção via `RepositoryController` em `/admin/repository`
+- métricas principais em `modules/{plugin,theme}` e hooks para auditoria
 
-LOG_CHANNEL=stack
-LOG_LEVEL=debug
+## RBAC/ACL
 
-SESSION_DRIVER=file
-SESSION_LIFETIME=120
-CACHE_STORE=file
-QUEUE_CONNECTION=sync
-```
+- Roles, permissions, seeders
+- Middlewares: `admin`, `permission`
+- Todos os CRUDs admin são protegidos por permissões nomeadas
 
-Se usar SQLite:
-```env
-DB_CONNECTION=sqlite
-DB_DATABASE=/home/jarvies/starter-laravel/database/database.sqlite
-```
+## Blog module
+
+- instalável via repo
+- rotas públicas: `/blog`, `/{post}`
+- CRUD admin: `/admin/blog`, `/admin/categories`, `/admin/tags`
+- Actions e hooks separados: `blog.post.*`, `blog.category.*`, `blog.tag.*`
 
 ## Estrutura
 
-- `app/Models/BaseModel.php` — base abstrata com `$guarded=['id']` e `scopeActive`
-- `app/Http/Controllers/Controller.php` — controller base com helper `ok()`
-- `app/Http/Controllers/Admin/AdminController.php` — controller admin genérico
-- `resources/views/layouts/app.blade.php` — layout público (Bootstrap)
-- `resources/views/layouts/admin.blade.php` — layout admin (Bootstrap)
-- `app/Http/Middleware/AdminMiddleware.php` — middleware de grupo admin baseado em permissão
-- `app/Http/Middleware/CheckPermission.php` — middleware de permissão específica
+- `app/Http/Controllers/Admin/Controller.php` — controller admin base
+- `app/Http/Controllers/Public/Controller.php` — controller público base
+- `app/Http/Middleware/AdminMiddleware.php` — middleware admin
+- `app/Http/Middleware/CheckPermission.php` — middleware de permissão
+- `app/Models/BaseModel.php` — base abstrata com `$guarded=['id']`
+- `app/Actions/` — actions reutilizáveis
 
 ## CRUDs incluídos
 
-- `/admin/examples` — controller + migration + views (template copy-paste)
+- `/admin/blog` — module instalável com CRUD + actions + hooks
+- `/admin/examples` — controller + migration + views
 - `/admin/articles` — CRUD exemplo Articles
+- `/admin/locales` — CRUD de locales
 - `/admin/permissions` — CRUD de permissões ACL
 
 ## Rotas importantes
@@ -73,15 +66,28 @@ DB_DATABASE=/home/jarvies/starter-laravel/database/database.sqlite
 - `/` — home pública
 - `/admin/login` — login admin
 - `/admin` — dashboard
-- `/admin/examples`, `/admin/locales`, `/admin/permissions` — CRUDs exemplo
+- `/admin/repository` — instalar/desinstalar módulos/plugins/themes
+- `/admin/examples`, `/admin/articles`, `/admin/locales`, `/admin/permissions` — CRUDs exemplo
 
 ## Seeders
 
-- `php artisan db:seed --class=PermissionSeeder` — cria permissão inicial
-- `php artisan db:seed --class=AdminUserSeeder` — cria admin padrão e atribui permissão
-- `php artisan db:seed` — popula usuário teste padrão + permissões
+- `php artisan db:seed --class=PermissionSeeder`
+- `php artisan db:seed --class=AdminUserSeeder`
+- `php artisan db:seed`
 
-Login admin padrão: `test@example.com` / `test123` (precisa ter permissão `admin.access`)
+## .env.testing
+
+```env
+APP_ENV=testing
+APP_MAINTENANCE_DRIVER=file
+BCRYPT_ROUNDS=4
+CACHE_STORE=array
+MAIL_MAILER=array
+PULSE_ENABLED=false
+QUEUE_CONNECTION=sync
+SESSION_DRIVER=array
+TELESCOPE_ENABLED=false
+```
 
 ## Comandos úteis
 
@@ -92,14 +98,14 @@ npm run build
 php artisan test
 ```
 
-## Troubleshooting
-
-- **PDO drivers vazios**: verifique `php -m | grep pdo`
-- **MySQL access denied**: teste conexão com `mysql -h127.0.0.1 -P3306 -u root -p`
-- **Rotas não atualizadas**: delete `bootstrap/cache/routes.php` e rode `php artisan route:cache`
-
 ## Convenções
 
-- Não altere o core frequentemente
-- Copie controllers existentes para novos módulos
-- Prefixos e comportamentos específicos devem ir no controller filho
+- Manter controllers finos
+- Preferir Actions e hooks em vez de lógica direta
+- Dar preferência a Services/Actions para lógica compartilhada
+
+## Troubleshooting
+
+- **PDO drivers vazios**: `php -m | grep pdo`
+- **MySQL access denied**: `mysql -h127.0.0.1 -P3306 -u root -p`
+- **Rotas não atualizadas**: delete cache `php artisan optimize:clear`

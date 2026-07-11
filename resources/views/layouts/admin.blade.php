@@ -5,47 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Admin - '.config('app.name'))</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     @vite('resources/css/app.css')
 </head>
 <body class="bg-light">
 
 <div class="d-flex w-100">
-    <aside class="d-flex flex-column flex-shrink-0 p-3 bg-dark" style="width: 240px; min-height: 100vh;">
+    <aside class="d-flex flex-column flex-shrink-0 p-3 bg-dark text-white" style="width: 240px; min-height: 100vh;">
         <a href="{{ route('admin.dashboard') }}" class="d-flex align-items-center mb-3 mb-md-0 text-white text-decoration-none">
             <span class="fs-4">&rsaquo; Admin</span>
         </a>
         <hr>
         <ul class="nav nav-pills flex-column mb-auto">
-            <li class="nav-item">
-                <a href="{{ route('admin.dashboard') }}" class="nav-link text-white">Dashboard</a>
-            </li>
-            <li>
-                <a href="{{ route('admin.examples.index') }}" class="nav-link text-white">Examples</a>
-            </li>
-            <li>
-                <a href="{{ route('admin.articles.index') }}" class="nav-link text-white">Articles</a>
-            </li>
-            <li>
-                <a href="{{ route('admin.locales.index') }}" class="nav-link text-white">Idiomas</a>
-            </li>
-            @if(auth()->check() && auth()->user()->hasPermission('permissions.manage'))
-                <li>
-                    <a href="{{ route('admin.permissions.index') }}" class="nav-link text-white">Permissões</a>
+            @php $adminSidebarMenu = $adminSidebarMenu ?? []; @endphp
+            @if(count($adminSidebarMenu) > 0)
+                @foreach($adminSidebarMenu as $item)
+                    @if(!empty($item['route']) && \Illuminate\Support\Facades\Route::has($item['route']))
+                        <li class="nav-item">
+                            <a href="{{ route($item['route']) }}" class="nav-link text-white">
+                                @if(!empty($item['icon']))
+                                    <i class="{{ $item['icon'] }} me-2"></i>
+                                @endif
+                                {{ $item['name'] ?? $item['route'] }}
+                            </a>
+                        </li>
+                    @endif
+                @endforeach
+            @else
+                <li class="nav-item">
+                    <a href="{{ route('admin.dashboard') }}" class="nav-link text-white"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
                 </li>
-            @endif
-            @if(auth()->check() && auth()->user()->hasPermission('roles.manage'))
-                <li>
-                    <a href="{{ route('admin.roles.index') }}" class="nav-link text-white">Perfis</a>
+                <li class="nav-item">
+                    <a href="{{ route('admin.users.index') }}" class="nav-link text-white"><i class="bi bi-people me-2"></i>Usuários</a>
                 </li>
-            @endif
-            @if(auth()->check() && auth()->user()->hasPermission('users.manage'))
-                <li>
-                    <a href="{{ route('admin.users.index') }}" class="nav-link text-white">Usuários</a>
+                <li class="nav-item">
+                    <a href="{{ route('admin.roles.index') }}" class="nav-link text-white"><i class="bi bi-shield-lock me-2"></i>Perfis</a>
                 </li>
-            @endif
-            @if(auth()->check() && auth()->user()->hasPermission('repository.manage'))
-                <li>
-                    <a href="{{ route('admin.repository.index') }}" class="nav-link text-white">Repositório</a>
+                <li class="nav-item">
+                    <a href="{{ route('admin.permissions.index') }}" class="nav-link text-white"><i class="bi bi-key me-2"></i>Permissões</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.repository.index') }}" class="nav-link text-white"><i class="bi bi-box me-2"></i>Repositório</a>
                 </li>
             @endif
         </ul>

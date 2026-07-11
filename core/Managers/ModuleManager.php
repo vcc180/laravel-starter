@@ -7,6 +7,7 @@ use Core\Contracts\HookInterface;
 use Core\Contracts\ResultInterface;
 use Core\Contracts\RegistryInterface;
 use Core\Exceptions\PackageException;
+use Core\Support\Manifest;
 use Core\Support\Result;
 use InvalidArgumentException;
 
@@ -42,7 +43,7 @@ final class ModuleManager extends PackageManager
             'status' => $this->packageRegistry->has($manifest->getSlug()) ? 'upgraded' : 'discovered',
         ]);
 
-        return new Result(true, 'Módulo registrado.', $manifest);
+        return Result::ok()->withManifest($manifest);
     }
 
     public function load(string $slug): ModuleInterface

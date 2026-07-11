@@ -10,7 +10,7 @@ final class Manifest
 
     private string $path;
 
-    public function __construct(string $path)
+    public function __construct(string $path, string $baseDir = '')
     {
         if (!is_file($path) || !is_readable($path)) {
             throw new InvalidArgumentException("Manifest file not found or unreadable: {$path}");
@@ -70,10 +70,10 @@ final class Manifest
 
     public function getVersion(): ?string
     {
-        $version = $this->data['version'] ?? null;
+        $slug = $this->data['version'] ?? null;
 
-        if ($version !== null && is_string($version)) {
-            return $version;
+        if ($slug !== null && is_string($slug)) {
+            return $slug;
         }
 
         return null;

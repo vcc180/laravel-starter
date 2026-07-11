@@ -23,6 +23,6 @@ class Post extends BaseModel
 
     public function tags(): BelongsToMany
     {
-        return $this->belongsToMany(Tag::class, 'blog_post_tag');
+        return $this->belongsToMany(Tag::class, 'blog_post_tag', 'blog_post_id', 'blog_tag_id');
     }
 }

@@ -1,0 +1,6 @@
+{
+  "name": "Institucional Theme",
+  "slug": "institutional",
+  "version": "0.2.0",
+  "provider": "Themes\\Institutional\\InstitutionalServiceProvider"
+}

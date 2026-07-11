@@ -42,7 +42,7 @@ final class PluginManager extends PackageManager
             'status' => $this->packageRegistry->has($manifest->getSlug()) ? 'upgraded' : 'discovered',
         ]);
 
-        return new Result(true, 'Plugin registrado.', $manifest);
+        return Result::ok()->withManifest($manifest);
     }
 
     public function load(string $slug): PluginInterface

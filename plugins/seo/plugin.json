@@ -1,0 +1,6 @@
+{
+  "name": "SEO",
+  "slug": "seo",
+  "version": "0.1.0",
+  "provider": "Plugins\\Seo\\SeoServiceProvider"
+}

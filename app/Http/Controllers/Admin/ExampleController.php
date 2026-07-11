@@ -4,23 +4,18 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Admin\Controller;
 use App\Http\Requests\Admin\ExampleRequest;
+use App\Actions\ListAdminExamples;
 use App\Models\Example;
+use Illuminate\Http\Request;
 
 class ExampleController extends Controller
 {
-    public function index(Request $request)
+    public function index(ListAdminExamples $action, Request $request)
     {
-        $term = trim((string) $request->query('q', ''));
-        $query = Example::query();
-
-        if ($term !== '') {
-            $query->where('name', 'like', "%{$term}%")
-                  ->orWhere('notes', 'like', "%{$term}%");
-        }
-
-        $items = $query->orderByDesc('id')->paginate(10)->withQueryString();
-
-        return view('admin.examples.index', compact('items', 'term'));
+        return view('admin.examples.index', [
+            'items' => $action->handle((string) $request->query('q', '')),
+            'term' => (string) $request->query('q', ''),
+        ]);
     }
 
     public function create()

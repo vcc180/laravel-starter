@@ -1,18 +1,21 @@
 <?php
 
-namespace Modules\Blog\Http\Controllers;
+namespace Modules\Blog\Http\Controllers\Admin;
 
 use Modules\Blog\Actions\CreateTag;
 use Modules\Blog\Actions\DeleteTag;
+use Modules\Blog\Actions\ListAdminTags;
 use Modules\Blog\Actions\UpdateTag;
-use Modules\Blog\Http\Requests\Admin\TagRequest;
+use App\Http\Controllers\Controller;
 use Modules\Blog\Models\Tag;
 
-class TagController extends \App\Http\Controllers\Admin\Controller
+class TagController extends Controller
 {
-    public function index()
+    public function index(ListAdminTags $action)
     {
-        return view('blog::admin.tags.index', ['items' => Tag::query()->orderByDesc('id')->paginate(20)]);
+        $items = $action->handle(request('q') ? request('q') : '');
+
+        return view('blog::admin.tags.index', ['items' => $items]);
     }
 
     public function create()
@@ -20,9 +23,9 @@ class TagController extends \App\Http\Controllers\Admin\Controller
         return view('blog::admin.tags.create');
     }
 
-    public function store(TagRequest $request, CreateTag $action)
+    public function store(CreateTag $action)
     {
-        $action->handle($request->validated());
+        $action->handle(request()->all());
 
         return redirect()->route('admin.tags.index')->with('status', 'Tag criada.');
     }
@@ -32,9 +35,9 @@ class TagController extends \App\Http\Controllers\Admin\Controller
         return view('blog::admin.tags.edit', ['item' => $tag]);
     }
 
-    public function update(TagRequest $request, Tag $tag, UpdateTag $action)
+    public function update(Tag $tag, UpdateTag $action)
     {
-        $action->handle($tag, $request->validated());
+        $action->handle($tag, request()->all());
 
         return redirect()->route('admin.tags.index')->with('status', 'Tag atualizada.');
     }
@@ -43,6 +46,6 @@ class TagController extends \App\Http\Controllers\Admin\Controller
     {
         $action->handle($tag);
 
-        return back()->with('status', 'Tag removida.');
+        return redirect()->route('admin.tags.index')->with('status', 'Tag removida.');
     }
 }

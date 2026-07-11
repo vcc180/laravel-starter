@@ -58,6 +58,19 @@ abstract class PackageManager
         $this->directories = $directories;
     }
 
+    /**
+     * @return array<string, string>
+     */
+    public function directories(): array
+    {
+        return $this->directories;
+    }
+
+    public function packageRegistry(): PackageRegistry
+    {
+        return $this->packageRegistry;
+    }
+
     public function boot(): ResultInterface
     {
         if ($this->isBooted()) {

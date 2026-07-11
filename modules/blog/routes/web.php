@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Blog\Http\Controllers\CategoryController;
+use Modules\Blog\Http\Controllers\Admin\CategoryController;
 use Modules\Blog\Http\Controllers\PostController;
-use Modules\Blog\Http\Controllers\TagController;
+use Modules\Blog\Http\Controllers\Admin\TagController;
 use App\Http\Middleware\CheckPermission;
 
 Route::middleware(['web', 'auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -15,6 +15,7 @@ Route::middleware(['web', 'auth', 'admin'])->prefix('admin')->name('admin.')->gr
         Route::get('/blog/{post}/edit', [PostController::class, 'edit'])->name('blog.edit');
         Route::put('/blog/{post}', [PostController::class, 'update'])->name('blog.update');
         Route::delete('/blog/{post}', [PostController::class, 'destroy'])->name('blog.destroy');
+        Route::get('/blog/dashboard', \Modules\Blog\Http\Controllers\Admin\DashboardController::class)->name('blog.dashboard');
     });
 
     Route::middleware(CheckPermission::class.':blog.categories.*')->group(function () {

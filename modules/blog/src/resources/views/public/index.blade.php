@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends(isset($themeLayout) ? $themeLayout : 'layouts.app')
 
 @section('content')
 <div class="container py-4">

@@ -1,6 +1,6 @@
 {
   "_comment": "Manifesto simplificado tipo composer, mas com campos para autoload",
-  "name": "vcc180/blog",
+  "name": "blog",
   "description": "Blog module",
   "type": "laravel-module",
   "version": "1.0.0",

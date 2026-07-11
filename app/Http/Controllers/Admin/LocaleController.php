@@ -4,28 +4,18 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Admin\Controller;
 use App\Http\Requests\Admin\LocaleRequest;
+use App\Actions\ListAdminLocales;
 use App\Models\Locale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
 class LocaleController extends Controller
 {
-    public function index(Request $request)
+    public function index(ListAdminLocales $action, Request $request)
     {
-        $term = (string) $request->query('q', '');
-
-        $query = Locale::query();
-
-        if ($term !== '') {
-            $query->where('locale', 'like', "%{$term}%")
-                  ->orWhere('name', 'like', "%{$term}%");
-        }
-
-        $items = $query->orderByDesc('id')->paginate(20)->withQueryString();
-
         return view('admin.locales.index', [
-            'items' => $items,
-            'term' => $term,
+            'items' => $action->handle((string) $request->query('q', '')),
+            'term' => (string) $request->query('q', ''),
         ]);
     }
 

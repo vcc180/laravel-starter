@@ -1,18 +1,21 @@
 <?php
 
-namespace Modules\Blog\Http\Controllers;
+namespace Modules\Blog\Http\Controllers\Admin;
 
 use Modules\Blog\Actions\CreateCategory;
 use Modules\Blog\Actions\DeleteCategory;
+use Modules\Blog\Actions\ListAdminCategories;
 use Modules\Blog\Actions\UpdateCategory;
-use Modules\Blog\Http\Requests\Admin\CategoryRequest;
+use App\Http\Controllers\Controller;
 use Modules\Blog\Models\Category;
 
-class CategoryController extends \App\Http\Controllers\Admin\Controller
+class CategoryController extends Controller
 {
-    public function index()
+    public function index(ListAdminCategories $action)
     {
-        return view('blog::admin.categories.index', ['items' => Category::query()->orderByDesc('id')->paginate(20)]);
+        $items = $action->handle(request('q') ? request('q') : '');
+
+        return view('blog::admin.categories.index', ['items' => $items]);
     }
 
     public function create()
@@ -20,9 +23,9 @@ class CategoryController extends \App\Http\Controllers\Admin\Controller
         return view('blog::admin.categories.create');
     }
 
-    public function store(CategoryRequest $request, CreateCategory $action)
+    public function store(CreateCategory $action)
     {
-        $action->handle($request->validated());
+        $action->handle(request()->all());
 
         return redirect()->route('admin.categories.index')->with('status', 'Categoria criada.');
     }
@@ -32,9 +35,9 @@ class CategoryController extends \App\Http\Controllers\Admin\Controller
         return view('blog::admin.categories.edit', ['item' => $category]);
     }
 
-    public function update(CategoryRequest $request, Category $category, UpdateCategory $action)
+    public function update(Category $category, UpdateCategory $action)
     {
-        $action->handle($category, $request->validated());
+        $action->handle($category, request()->all());
 
         return redirect()->route('admin.categories.index')->with('status', 'Categoria atualizada.');
     }
@@ -43,6 +46,6 @@ class CategoryController extends \App\Http\Controllers\Admin\Controller
     {
         $action->handle($category);
 
-        return back()->with('status', 'Categoria removida.');
+        return redirect()->route('admin.categories.index')->with('status', 'Categoria removida.');
     }
 }

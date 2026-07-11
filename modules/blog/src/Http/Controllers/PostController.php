@@ -4,15 +4,16 @@ namespace Modules\Blog\Http\Controllers;
 
 use Modules\Blog\Actions\CreatePost;
 use Modules\Blog\Actions\DeletePost;
+use Modules\Blog\Actions\ListAdminPosts;
 use Modules\Blog\Actions\UpdatePost;
 use Modules\Blog\Http\Requests\Admin\PostRequest;
 use Modules\Blog\Models\Post;
 
 class PostController extends \App\Http\Controllers\Admin\Controller
 {
-    public function index()
+    public function index(ListAdminPosts $action)
     {
-        return view('blog::admin.index', ['items' => Post::query()->orderByDesc('id')->paginate(20)]);
+        return view('blog::admin.index', ['items' => $action->handle(request('q'))]);
     }
 
     public function create()
@@ -48,6 +49,6 @@ class PostController extends \App\Http\Controllers\Admin\Controller
     {
         $action->handle($post);
 
-        return back()->with('status', 'Post removido.');
+        return redirect()->route('admin.blog.index')->with('status', 'Post removido.');
     }
 }
